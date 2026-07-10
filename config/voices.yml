@@ -1,0 +1,13 @@
+voices:
+  teddy:
+    voice: vi-VN-HoaiMyNeural
+    rate: "-8%"
+    pitch: "-5Hz"
+  lily:
+    voice: vi-VN-HoaiMyNeural
+    rate: "+10%"
+    pitch: "+18Hz"
+  hoot:
+    voice: vi-VN-NamMinhNeural
+    rate: "-10%"
+    pitch: "-8Hz"

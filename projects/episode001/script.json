@@ -1,0 +1,22 @@
+{
+ "title": "Episode 001",
+
+ "scenes": [
+  {
+   "id": 1,
+   "background": "classroom",
+   "character": "teddy",
+   "pose": "wave",
+   "text": "Xin chào các bạn nhỏ!",
+   "duration": 3
+  },
+  {
+   "id": 2,
+   "background": "classroom",
+   "character": "lily",
+   "pose": "happy",
+   "text": "Ôi! Lớp học đẹp quá!",
+   "duration": 2.5
+  }
+ ]
+}

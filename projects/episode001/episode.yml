@@ -1,0 +1,20 @@
+episode:
+
+  id: episode001
+
+  title: Bài học đầu tiên
+
+scenes:
+
+  - background: classroom
+    character: teddy
+    pose: wave
+    text: Xin chào các bạn nhỏ!
+
+  - character: lily
+    pose: happy
+    text: Ôi! Lớp học đẹp quá!
+
+  - character: hoot
+    pose: explain
+    text: Hôm nay chúng mình sẽ học chữ A nhé!

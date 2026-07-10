@@ -1,0 +1,40 @@
+package com.aivideostudio.renderer;
+
+import java.time.Duration;
+import java.time.Instant;
+
+public class RendererResult {
+
+    private Instant start;
+    private Instant end;
+    private boolean success;
+
+    public void start() {
+        start = Instant.now();
+    }
+
+    public void finish() {
+        end = Instant.now();
+        success = true;
+    }
+
+    public void fail() {
+        end = Instant.now();
+        success = false;
+    }
+
+    public boolean isSuccess() {
+        return success;
+    }
+
+    public Duration getDuration() {
+
+        if (start == null || end == null) {
+            return Duration.ZERO;
+        }
+
+        return Duration.between(start, end);
+
+    }
+
+}

@@ -1,0 +1,28 @@
+characters:
+  teddy:
+    displayName: Teddy
+    voice: vi-VN-HoaiMyNeural
+    rate: "-8%"
+    pitch: "-5Hz"
+    imageFolder: teddy
+    defaultPose: wave
+    subtitleColor: "#FFD54F"
+    defaultAnimation: fade
+  lily:
+    displayName: Lily
+    voice: vi-VN-HoaiMyNeural
+    rate: "+10%"
+    pitch: "+18Hz"
+    imageFolder: lily
+    defaultPose: happy
+    subtitleColor: "#F48FB1"
+    defaultAnimation: fade
+  hoot:
+    displayName: Hoot
+    voice: vi-VN-NamMinhNeural
+    rate: "-10%"
+    pitch: "-8Hz"
+    imageFolder: hoot
+    defaultPose: explain
+    subtitleColor: "#90CAF9"
+    defaultAnimation: fade

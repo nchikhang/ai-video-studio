@@ -1,0 +1,23 @@
+backgrounds:
+  classroom:
+    image: assets/backgrounds/classroom.png
+  kitchen:
+    image: assets/backgrounds/kitchen.png
+  meadow:
+    image: assets/backgrounds/meadow.png
+  night_sky:
+    image: assets/backgrounds/night_sky.png
+  pastel_sky:
+    image: assets/backgrounds/pastel_sky.png
+  playground:
+    image: assets/backgrounds/playground.png
+  pond:
+    image: assets/backgrounds/pond.png
+  library:
+    image: assets/backgrounds/library.png
+  road:
+    image: assets/backgrounds/road.png
+  stage:
+    image: assets/backgrounds/stage.png
+  underwater:
+    image: assets/backgrounds/underwater.png
