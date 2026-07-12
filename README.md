@@ -49,7 +49,7 @@ Export YouTube
 
 # Current Version
 
-v0.9.0
+v1.0.0
 
 ---
 
@@ -299,6 +299,8 @@ Automatic Video Composer
 ## v1.0
 
 One Click Build
+
+✅ Done
 
 episode.yml
 

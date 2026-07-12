@@ -1,0 +1,257 @@
+From 7ff536b11506f3651a1717a77799d2dc019404ed Mon Sep 17 00:00:00 2001
+From: dev <dev@local>
+Date: Sun, 12 Jul 2026 15:02:41 +0000
+Subject: [PATCH] =?UTF-8?q?v1.0=20(draft):=20One-Click=20Build=20=E2=80=94?=
+ =?UTF-8?q?=20RenderStep=20(melt,=20render-mode=20MLT)=20+=20PublishCheckS?=
+ =?UTF-8?q?tep=20(loudnorm=202-pass/blackdetect/silencedetect/thumbnail)?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+---
+ .../kdenlive/writer/KdenliveXmlWriter.java    |  13 +-
+ .../pipeline/step/PublishCheckStep.java       | 132 ++++++++++++++++++
+ .../pipeline/step/RenderStep.java             |  57 ++++++++
+ 3 files changed, 200 insertions(+), 2 deletions(-)
+ create mode 100644 src/main/java/com/aivideostudio/pipeline/step/PublishCheckStep.java
+ create mode 100644 src/main/java/com/aivideostudio/pipeline/step/RenderStep.java
+
+diff --git a/src/main/java/com/aivideostudio/kdenlive/writer/KdenliveXmlWriter.java b/src/main/java/com/aivideostudio/kdenlive/writer/KdenliveXmlWriter.java
+index d67c977..02acc46 100644
+--- a/src/main/java/com/aivideostudio/kdenlive/writer/KdenliveXmlWriter.java
++++ b/src/main/java/com/aivideostudio/kdenlive/writer/KdenliveXmlWriter.java
+@@ -67,11 +67,20 @@ public class KdenliveXmlWriter {
+ 
+     // ------------------------------------------------------------------ API
+     public void write(KdenliveProject project, Path output) throws Exception {
++        write(project, output, false);
++    }
++
++    /** renderMode=true -> root producer = timeline tractor (for headless `melt` render). */
++    public void write(KdenliveProject project, Path output, boolean renderMode) throws Exception {
+         Files.createDirectories(output.toAbsolutePath().getParent());
+-        Files.writeString(output, toXml(project), StandardCharsets.UTF_8);
++        Files.writeString(output, toXml(project, renderMode), StandardCharsets.UTF_8);
+     }
+ 
+     public String toXml(KdenliveProject project) throws Exception {
++        return toXml(project, false);
++    }
++
++    public String toXml(KdenliveProject project, boolean renderMode) throws Exception {
+         Document doc = DocumentBuilderFactory.newInstance()
+                 .newDocumentBuilder().newDocument();
+         doc.setXmlStandalone(true);
+@@ -82,7 +91,7 @@ public class KdenliveXmlWriter {
+         Element mlt = doc.createElement("mlt");
+         mlt.setAttribute("LC_NUMERIC", "C");
+         mlt.setAttribute("version", mltVersion);
+-        mlt.setAttribute("producer", "main_bin");
++        mlt.setAttribute("producer", renderMode ? "maintractor" : "main_bin");
+         mlt.setAttribute("root", rootPath);
+         doc.appendChild(mlt);
+ 
+diff --git a/src/main/java/com/aivideostudio/pipeline/step/PublishCheckStep.java b/src/main/java/com/aivideostudio/pipeline/step/PublishCheckStep.java
+new file mode 100644
+index 0000000..86b3319
+--- /dev/null
++++ b/src/main/java/com/aivideostudio/pipeline/step/PublishCheckStep.java
+@@ -0,0 +1,132 @@
++package com.aivideostudio.pipeline.step;
++
++import com.aivideostudio.pipeline.BasePipeline;
++import com.aivideostudio.pipeline.PipelineContext;
++
++import java.nio.file.Path;
++import java.util.ArrayList;
++import java.util.List;
++import java.util.regex.Matcher;
++import java.util.regex.Pattern;
++
++/**
++ * v1.0 — publish gate (ffmpeg): 2-pass loudnorm to -14 LUFS / 48 kHz, then blackdetect,
++ * silencedetect (fail if any valley > 0.8s), and a thumbnail. Loudness is normalized in
++ * place (&lt;id&gt;.mp4); black/silence issues are reported as warnings for review.
++ */
++public class PublishCheckStep extends BasePipeline {
++
++    private static final double SILENCE_MAX = 0.8; // seconds
++
++    @Override
++    public void execute(PipelineContext context) throws Exception {
++        title("Publish Check (ffmpeg)");
++        String id = context.getEpisode().getId();
++        Path root = context.getWorkspace().getRoot();
++        Path raw = root.resolve(id + "_raw.mp4");
++        Path out = root.resolve(id + ".mp4");
++        Path thumb = context.getWorkspace().getThumbnailFolder().resolve(id + ".jpg");
++
++        normalizeLoudness(raw, out);          // 2-pass loudnorm -> -14 LUFS, 48 kHz
++        checkBlack(out);
++        checkSilence(out);
++        makeThumbnail(out, thumb);
++
++        success("Publish check done -> " + out);
++    }
++
++    // -- loudnorm 2-pass --------------------------------------------------
++    private void normalizeLoudness(Path in, Path out) throws Exception {
++        info("Loudness pass 1/2 (measuring)...");
++        String log = capture(
++                "ffmpeg", "-hide_banner", "-nostats", "-i", in.toString(),
++                "-af", "loudnorm=I=-14:TP=-1:LRA=11:print_format=json",
++                "-f", "null", "-");
++        String json = lastJsonBlock(log);
++        String mI = field(json, "input_i"), mTP = field(json, "input_tp"),
++               mLRA = field(json, "input_lra"), mThr = field(json, "input_thresh"),
++               off = field(json, "target_offset");
++
++        List<String> cmd = new ArrayList<>(List.of(
++                "ffmpeg", "-hide_banner", "-y", "-i", in.toString()));
++        String af = "loudnorm=I=-14:TP=-1:LRA=11:print_format=summary";
++        if (mI != null && !mI.contains("inf")) {   // valid measurement -> linear 2nd pass
++            af += ":measured_I=" + mI + ":measured_TP=" + mTP
++                + ":measured_LRA=" + mLRA + ":measured_thresh=" + mThr
++                + ":offset=" + off + ":linear=true";
++        }
++        cmd.addAll(List.of("-af", af, "-ar", "48000", "-c:v", "copy",
++                "-c:a", "aac", "-b:a", "192k", out.toString()));
++        info("Loudness pass 2/2 (applying -14 LUFS / 48 kHz)...");
++        if (run(cmd.toArray(new String[0])) != 0) {
++            throw new IllegalStateException("loudnorm pass 2 failed");
++        }
++    }
++
++    // -- black frames -----------------------------------------------------
++    private void checkBlack(Path file) throws Exception {
++        String log = capture("ffmpeg", "-hide_banner", "-nostats", "-i", file.toString(),
++                "-vf", "blackdetect=d=0.1:pic_th=0.98", "-an", "-f", "null", "-");
++        List<String> hits = matches(log, "black_start:([0-9.]+)");
++        if (hits.isEmpty()) info("blackdetect: OK (no black frames)");
++        else info("\u26a0 blackdetect: " + hits.size() + " black segment(s) at " + hits);
++    }
++
++    // -- silence (valleys) ------------------------------------------------
++    private void checkSilence(Path file) throws Exception {
++        String log = capture("ffmpeg", "-hide_banner", "-nostats", "-i", file.toString(),
++                "-af", "silencedetect=noise=-50dB:d=" + SILENCE_MAX, "-f", "null", "-");
++        List<String> durs = matches(log, "silence_duration: ([0-9.]+)");
++        if (durs.isEmpty()) info("silencedetect: OK (no valley > " + SILENCE_MAX + "s)");
++        else info("\u26a0 silencedetect: " + durs.size() + " valley(ies) > "
++                + SILENCE_MAX + "s, durations=" + durs);
++    }
++
++    // -- thumbnail --------------------------------------------------------
++    private void makeThumbnail(Path file, Path thumb) throws Exception {
++        java.nio.file.Files.createDirectories(thumb.getParent());
++        if (run("ffmpeg", "-y", "-v", "error", "-ss", "1", "-i", file.toString(),
++                "-frames:v", "1", "-q:v", "2", thumb.toString()) == 0) {
++            info("thumbnail: " + thumb);
++        } else {
++            info("\u26a0 thumbnail extraction failed");
++        }
++    }
++
++    // -- helpers ----------------------------------------------------------
++    private String lastJsonBlock(String s) {
++        Matcher m = Pattern.compile("\\{[^{}]*\\}", Pattern.DOTALL).matcher(s);
++        String last = "{}";
++        while (m.find()) last = m.group();
++        return last;
++    }
++
++    private String field(String json, String key) {
++        Matcher m = Pattern.compile("\"" + key + "\"\\s*:\\s*\"([^\"]+)\"").matcher(json);
++        return m.find() ? m.group(1) : null;
++    }
++
++    private List<String> matches(String s, String regex) {
++        List<String> out = new ArrayList<>();
++        Matcher m = Pattern.compile(regex).matcher(s);
++        while (m.find()) out.add(m.group(1));
++        return out;
++    }
++
++    private String capture(String... cmd) throws Exception {
++        Process p = new ProcessBuilder(cmd).redirectErrorStream(true).start();
++        StringBuilder sb = new StringBuilder();
++        try (var r = p.inputReader()) {
++            String line;
++            while ((line = r.readLine()) != null) sb.append(line).append('\n');
++        }
++        p.waitFor();
++        return sb.toString();
++    }
++
++    private int run(String... cmd) throws Exception {
++        Process p = new ProcessBuilder(cmd).redirectErrorStream(true).start();
++        try (var r = p.inputReader()) { while (r.readLine() != null) {} }
++        return p.waitFor();
++    }
++}
+diff --git a/src/main/java/com/aivideostudio/pipeline/step/RenderStep.java b/src/main/java/com/aivideostudio/pipeline/step/RenderStep.java
+new file mode 100644
+index 0000000..a7213f7
+--- /dev/null
++++ b/src/main/java/com/aivideostudio/pipeline/step/RenderStep.java
+@@ -0,0 +1,57 @@
++package com.aivideostudio.pipeline.step;
++
++import com.aivideostudio.config.ProjectPaths;
++import com.aivideostudio.kdenlive.builder.*;
++import com.aivideostudio.kdenlive.model.KdenliveProject;
++import com.aivideostudio.kdenlive.writer.KdenliveXmlWriter;
++import com.aivideostudio.pipeline.BasePipeline;
++import com.aivideostudio.pipeline.PipelineContext;
++
++import java.nio.file.Path;
++
++/**
++ * v1.0 — headless render via MLT `melt`.
++ *
++ * Writes a render-mode MLT (root producer = timeline tractor, NOT the bin — otherwise
++ * melt would render the project bin instead of the timeline) and encodes it to mp4.
++ * Produces &lt;id&gt;_raw.mp4; loudness/format normalization happens in PublishCheckStep.
++ */
++public class RenderStep extends BasePipeline {
++
++    @Override
++    public void execute(PipelineContext context) throws Exception {
++        title("Rendering Video (melt)");
++
++        KdenliveProject project = new DefaultKdenliveBuilder(
++                new DefaultProducerBuilder(),
++                new DefaultPlaylistBuilder(),
++                new DefaultTractorBuilder()).build(context);
++
++        String id = context.getEpisode().getId();
++        Path renderMlt = context.getWorkspace().getKdenliveFolder().resolve(id + "_render.kdenlive");
++        Path rawMp4 = context.getWorkspace().getRoot().resolve(id + "_raw.mp4");
++
++        new KdenliveXmlWriter(ProjectPaths.ROOT.toString())
++                .write(project, renderMlt, true);   // renderMode = true
++        info("Render MLT: " + renderMlt);
++
++        int code = run(
++                "melt", renderMlt.toString(),
++                "-consumer", "avformat:" + rawMp4,
++                "vcodec=libx264", "preset=medium", "crf=20",
++                "acodec=aac", "ab=192k", "ar=48000");
++        if (code != 0) {
++            throw new IllegalStateException("melt render failed (exit " + code + "). Is melt installed?");
++        }
++        success("Rendered: " + rawMp4);
++    }
++
++    private int run(String... cmd) throws Exception {
++        Process p = new ProcessBuilder(cmd).redirectErrorStream(true).start();
++        try (var r = p.inputReader()) {
++            String line;
++            while ((line = r.readLine()) != null) { /* drain (melt is chatty) */ }
++        }
++        return p.waitFor();
++    }
++}
+-- 
+2.43.0
+

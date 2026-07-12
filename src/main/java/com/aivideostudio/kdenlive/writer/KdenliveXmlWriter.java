@@ -67,11 +67,20 @@ public class KdenliveXmlWriter {
 
     // ------------------------------------------------------------------ API
     public void write(KdenliveProject project, Path output) throws Exception {
+        write(project, output, false);
+    }
+
+    /** renderMode=true -> root producer = timeline tractor (for headless `melt` render). */
+    public void write(KdenliveProject project, Path output, boolean renderMode) throws Exception {
         Files.createDirectories(output.toAbsolutePath().getParent());
-        Files.writeString(output, toXml(project), StandardCharsets.UTF_8);
+        Files.writeString(output, toXml(project, renderMode), StandardCharsets.UTF_8);
     }
 
     public String toXml(KdenliveProject project) throws Exception {
+        return toXml(project, false);
+    }
+
+    public String toXml(KdenliveProject project, boolean renderMode) throws Exception {
         Document doc = DocumentBuilderFactory.newInstance()
                 .newDocumentBuilder().newDocument();
         doc.setXmlStandalone(true);
@@ -82,7 +91,7 @@ public class KdenliveXmlWriter {
         Element mlt = doc.createElement("mlt");
         mlt.setAttribute("LC_NUMERIC", "C");
         mlt.setAttribute("version", mltVersion);
-        mlt.setAttribute("producer", "main_bin");
+        mlt.setAttribute("producer", renderMode ? "maintractor" : "main_bin");
         mlt.setAttribute("root", rootPath);
         doc.appendChild(mlt);
 
