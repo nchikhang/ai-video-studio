@@ -27,7 +27,8 @@ public class Application {
             .add(new BuildWorkspaceStep())
             .add(new GenerateSpeechStep())
             .add(new BuildTimelineStep())
-            .add(new BuildManifestStep());
+            .add(new BuildManifestStep())
+            .add(new BuildKdenliveStep());
     PipelineResult pipelineResult = pipelineRunner.run(context);
     System.out.println();
     System.out.println("----------------------------");
@@ -43,22 +44,6 @@ public class Application {
     System.out.println("--------------------------");
     System.out.println("Renderer Success : " + rendererResult.isSuccess());
     System.out.println("Renderer Time : " + rendererResult.getDuration().toMillis() + " ms");
-
-    KdenliveBuilder builder =
-            new DefaultKdenliveBuilder(
-
-                    new EmptyProducerBuilder(),
-
-                    new EmptyPlaylistBuilder(),
-
-                    new EmptyTractorBuilder()
-
-            );
-
-    KdenliveProject project =
-            builder.build(context);
-
-    System.out.println(project);
 
     /*System.out.println("Scanning assets...\n");
     AssetScanner scanner = new AssetScanner();

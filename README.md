@@ -49,7 +49,7 @@ Export YouTube
 
 # Current Version
 
-v0.7.0-dev
+v0.8.0
 
 ---
 
@@ -282,9 +282,9 @@ Kdenlive Object Model
 
 ## v0.8
 
-Kdenlive XML Writer
+Kdenlive XML Writer + Timeline wiring (episode.yml → openable .kdenlive)
 
-🚧 In Progress
+✅ Done
 
 ---
 

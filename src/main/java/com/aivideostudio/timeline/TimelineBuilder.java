@@ -67,6 +67,20 @@ public class TimelineBuilder {
                             .resolve(scene.getBackground() + ".png")
             );
 
+            if (scene.getProp() != null) {
+                clip.setPropImage(
+                        ProjectPaths.PROPS
+                                .resolve(scene.getProp() + ".png")
+                );
+            }
+
+            if (scene.getCard() != null) {
+                clip.setPropImage(
+                        ProjectPaths.CARDS
+                                .resolve(scene.getCard() + ".png")
+                );
+            }
+
             timeline.add(clip);
 
         }

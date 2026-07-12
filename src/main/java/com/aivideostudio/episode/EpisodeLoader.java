@@ -38,6 +38,8 @@ public class EpisodeLoader {
             scene.setCharacter((String) item.get("character"));
             scene.setPose((String) item.get("pose"));
             scene.setText((String) item.get("text"));
+            scene.setProp((String) item.get("prop"));
+            scene.setCard((String) item.get("card"));
 
             episode.addScene(scene);
 

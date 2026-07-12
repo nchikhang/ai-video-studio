@@ -22,6 +22,8 @@ public class TimelineClip {
     private double x;
     private double y;
     private double scale = 1.0;
+    private Path propImage;
+    private Path cardImage;
 
     public int getIndex() {
         return index;
@@ -157,5 +159,21 @@ public class TimelineClip {
 
     public void setScale(double scale) {
         this.scale = scale;
+    }
+
+    public Path getPropImage() {
+        return propImage;
+    }
+
+    public void setPropImage(Path propImage) {
+        this.propImage = propImage;
+    }
+
+    public Path getCardImage() {
+        return cardImage;
+    }
+
+    public void setCardImage(Path cardImage) {
+        this.cardImage = cardImage;
     }
 }

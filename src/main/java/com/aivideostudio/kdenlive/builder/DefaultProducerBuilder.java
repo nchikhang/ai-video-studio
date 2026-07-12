@@ -1,47 +1,38 @@
 package com.aivideostudio.kdenlive.builder;
 
 import com.aivideostudio.kdenlive.builder.context.BuildContext;
-import com.aivideostudio.kdenlive.mapper.DefaultProducerMapper;
-import com.aivideostudio.kdenlive.mapper.ProducerMapper;
-//import com.aivideostudio.pipeline.model.Asset;
+import com.aivideostudio.kdenlive.builder.repository.ProducerRepository;
+import com.aivideostudio.timeline.Timeline;
+import com.aivideostudio.timeline.TimelineClip;
 
-import java.util.List;
-
+/**
+ * Maps the Timeline into MLT producers (bin clips), de-duplicated by resource.
+ * One image producer per distinct background / character / prop / card, and one
+ * audio producer per voice clip.
+ */
 public class DefaultProducerBuilder implements ProducerBuilder {
-
-    private final ProducerMapper producerMapper;
-
-    public DefaultProducerBuilder() {
-        this(new DefaultProducerMapper());
-    }
-
-    public DefaultProducerBuilder(ProducerMapper producerMapper) {
-        this.producerMapper = producerMapper;
-    }
 
     @Override
     public void build(BuildContext context) {
+        Timeline timeline = context.getPipelineContext().getTimeline();
+        if (timeline == null) return;
 
-        System.out.println("ProducerBuilder");
+        ProducerRepository repo =
+                context.getRepositories().getProducerRepository();
 
-        /*List<Asset> assets =
-                context.getPipelineContext()
-                       .getRenderContext()
-                       .getAssets();
-
-        if (assets == null || assets.isEmpty()) {
-            return;
+        for (TimelineClip clip : timeline.getClips()) {
+            if (clip.getBackgroundImage() != null)
+                repo.createImage(clip.getBackgroundImage().toString());
+            if (clip.getCharacterImage() != null)
+                repo.createImage(clip.getCharacterImage().toString());
+            if (clip.getPropImage() != null)
+                repo.createImage(clip.getPropImage().toString());
+            if (clip.getCardImage() != null)
+                repo.createImage(clip.getCardImage().toString());
+            if (clip.getAudioFile() != null) {
+                long ms = Math.round(clip.getDuration() * 1000.0);
+                repo.createAudio(clip.getAudioFile().toString(), ms);
+            }
         }
-
-        for (Asset asset : assets) {
-
-            producerMapper.map(
-                    context,
-                    asset.getPath()
-            );
-
-        }*/
-
     }
-
 }

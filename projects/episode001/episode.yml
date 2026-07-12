@@ -12,9 +12,9 @@ scenes:
     text: Xin chào các bạn nhỏ!
 
   - character: lily
-    pose: happy
+    pose: smile
     text: Ôi! Lớp học đẹp quá!
 
   - character: hoot
-    pose: explain
+    pose: reading_book
     text: Hôm nay chúng mình sẽ học chữ A nhé!

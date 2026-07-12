@@ -12,6 +12,10 @@ public class Scene {
 
     private String text;
 
+    private String prop;
+
+    private String card;
+
     public Scene() {
     }
 
@@ -64,5 +68,21 @@ public class Scene {
                 ", pose='" + pose + '\'' +
                 ", text='" + text + '\'' +
                 '}';
+    }
+
+    public String getProp() {
+        return prop;
+    }
+
+    public void setProp(String prop) {
+        this.prop = prop;
+    }
+
+    public String getCard() {
+        return card;
+    }
+
+    public void setCard(String card) {
+        this.card = card;
     }
 }

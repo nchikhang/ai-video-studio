@@ -26,6 +26,12 @@ public final class ProjectPaths {
     public static final Path EFFECTS =
             ASSETS.resolve("effects");
 
+    public static final Path PROPS =
+            ASSETS.resolve("props");
+
+    public static final Path CARDS =
+            ASSETS.resolve("cards");
+
     public static final Path PROJECTS =
             ROOT.resolve("projects");
 
