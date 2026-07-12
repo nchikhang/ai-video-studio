@@ -22,6 +22,7 @@ public class EpisodeLoader {
 
         episode.setId((String) info.get("id"));
         episode.setTitle((String) info.get("title"));
+        episode.setMusic((String) info.get("music"));
 
         List<Map<String, Object>> scenes =
                 (List<Map<String, Object>>) root.get("scenes");

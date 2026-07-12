@@ -1,0 +1,412 @@
+From 084d3cdd30b28449ef21aa01203172c1b380addc Mon Sep 17 00:00:00 2001
+From: dev <dev@local>
+Date: Sun, 12 Jul 2026 08:49:13 +0000
+Subject: [PATCH] =?UTF-8?q?v0.9:=20Automatic=20Video=20Composer=20?=
+ =?UTF-8?q?=E2=80=94=20per-layer=20qtblend=20transforms=20(bg/character/he?=
+ =?UTF-8?q?ro-pop/card)=20+=20continuous=20music=20bed?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+---
+ .../aivideostudio/composition/Composer.java   | 104 ++++++++++++++++++
+ .../com/aivideostudio/episode/Episode.java    |  10 ++
+ .../aivideostudio/episode/EpisodeLoader.java  |   1 +
+ .../builder/DefaultPlaylistBuilder.java       |  63 +++++++++--
+ .../builder/DefaultProducerBuilder.java       |  22 +++-
+ .../builder/DefaultTractorBuilder.java        |   1 +
+ .../kdenlive/model/PlaylistEntry.java         |   6 +
+ .../kdenlive/writer/KdenliveXmlWriter.java    |  15 +++
+ 8 files changed, 206 insertions(+), 16 deletions(-)
+ create mode 100644 src/main/java/com/aivideostudio/composition/Composer.java
+
+diff --git a/src/main/java/com/aivideostudio/composition/Composer.java b/src/main/java/com/aivideostudio/composition/Composer.java
+new file mode 100644
+index 0000000..4ac9b9e
+--- /dev/null
++++ b/src/main/java/com/aivideostudio/composition/Composer.java
+@@ -0,0 +1,104 @@
++package com.aivideostudio.composition;
++
++import com.aivideostudio.kdenlive.model.Filter;
++import com.aivideostudio.kdenlive.model.Profile;
++import com.aivideostudio.kdenlive.model.Property;
++
++import java.util.Locale;
++
++/**
++ * v0.9 — Automatic Video Composer.
++ *
++ * Turns a layer role (background / character / hero / card) into a Kdenlive
++ * `qtblend` transform filter with a `rect` keyframe string, so each layer is
++ * auto-positioned and animated (hero pops in). Coordinates are normalized:
++ * cx,cy in [0,1] = center of the clip in the frame; scale = fraction of the
++ * frame the clip occupies.
++ */
++public class Composer {
++
++    private static final int POP_FRAMES = 9; // ~0.3s at 30fps
++
++    private final Profile profile;
++
++    public Composer(Profile profile) {
++        this.profile = profile;
++    }
++
++    // ---- layer presets -------------------------------------------------
++    public Filter background() {                 // full frame, static
++        return still(0.5, 0.5, 1.0);
++    }
++
++    public Filter character() {                  // docked bottom-left
++        return still(0.24, 0.66, 0.55);
++    }
++
++    public Filter hero() {                        // center, pops in
++        return popIn(0.5, 0.5, 0.5);
++    }
++
++    public Filter card() {                        // top-center, static
++        return still(0.5, 0.12, 0.34);
++    }
++
++    /** Honour explicit values from a TimelineClip when the composer defaults aren't wanted. */
++    public Filter custom(double cx, double cy, double scale, String animation) {
++        if ("pop".equalsIgnoreCase(animation)) return popIn(cx, cy, scale);
++        return still(cx, cy, scale);
++    }
++
++    /** Static volume reduction for a continuous background-music track. */
++    public Filter musicVolume() {
++        Filter f = new Filter();
++        f.setService("volume");
++        f.getProperties().add(new Property("gain", "0.18")); // ~ -15 dB under the VO
++        return f;
++    }
++
++    // ---- builders ------------------------------------------------------
++    private Filter still(double cx, double cy, double scale) {
++        return qtblend(key(0) + "=" + rect(cx, cy, scale, 1.0));
++    }
++
++    private Filter popIn(double cx, double cy, double scale) {
++        String kf = key(0) + "=" + rect(cx, cy, scale * 0.05, 0.0)
++                + ";" + key(POP_FRAMES) + "=" + rect(cx, cy, scale, 1.0);
++        return qtblend(kf);
++    }
++
++    private Filter qtblend(String rectValue) {
++        Filter f = new Filter();
++        f.setService("qtblend");
++        add(f, "rotate_center", "1");
++        add(f, "kdenlive_id", "qtblend");
++        add(f, "rect", rectValue);
++        add(f, "rotation", key(0) + "=0");
++        add(f, "compositing", "0");
++        add(f, "distort", "0");
++        return f;
++    }
++
++    private void add(Filter f, String name, String value) {
++        f.getProperties().add(new Property(name, value));
++    }
++
++    private String rect(double cx, double cy, double scale, double opacity) {
++        int W = profile.getWidth(), H = profile.getHeight();
++        long w = Math.round(W * scale);
++        long h = Math.round(H * scale);
++        long x = Math.round(cx * W - w / 2.0);
++        long y = Math.round(cy * H - h / 2.0);
++        return x + " " + y + " " + w + " " + h + " "
++                + String.format(Locale.US, "%.6f", opacity);
++    }
++
++    /** Keyframe key as Kdenlive timecode HH:MM:SS.mmm (relative to clip start). */
++    private String key(long frame) {
++        long ms = Math.round(frame / profile.getFps() * 1000.0);
++        long hh = ms / 3_600_000; ms %= 3_600_000;
++        long mm = ms / 60_000;    ms %= 60_000;
++        long ss = ms / 1000;      ms %= 1000;
++        return String.format(Locale.US, "%02d:%02d:%02d.%03d", hh, mm, ss, ms);
++    }
++}
+diff --git a/src/main/java/com/aivideostudio/episode/Episode.java b/src/main/java/com/aivideostudio/episode/Episode.java
+index 142d9f5..f980956 100644
+--- a/src/main/java/com/aivideostudio/episode/Episode.java
++++ b/src/main/java/com/aivideostudio/episode/Episode.java
+@@ -9,6 +9,8 @@ public class Episode {
+ 
+     private String title;
+ 
++    private String music;
++
+     private final List<Scene> scenes = new ArrayList<>();
+ 
+     public Episode() {
+@@ -30,6 +32,14 @@ public class Episode {
+         this.title = title;
+     }
+ 
++    public String getMusic() {
++        return music;
++    }
++
++    public void setMusic(String music) {
++        this.music = music;
++    }
++
+     public List<Scene> getScenes() {
+         return scenes;
+     }
+diff --git a/src/main/java/com/aivideostudio/episode/EpisodeLoader.java b/src/main/java/com/aivideostudio/episode/EpisodeLoader.java
+index 9147092..23a77d1 100644
+--- a/src/main/java/com/aivideostudio/episode/EpisodeLoader.java
++++ b/src/main/java/com/aivideostudio/episode/EpisodeLoader.java
+@@ -22,6 +22,7 @@ public class EpisodeLoader {
+ 
+         episode.setId((String) info.get("id"));
+         episode.setTitle((String) info.get("title"));
++        episode.setMusic((String) info.get("music"));
+ 
+         List<Map<String, Object>> scenes =
+                 (List<Map<String, Object>>) root.get("scenes");
+diff --git a/src/main/java/com/aivideostudio/kdenlive/builder/DefaultPlaylistBuilder.java b/src/main/java/com/aivideostudio/kdenlive/builder/DefaultPlaylistBuilder.java
+index d77bece..24ad439 100644
+--- a/src/main/java/com/aivideostudio/kdenlive/builder/DefaultPlaylistBuilder.java
++++ b/src/main/java/com/aivideostudio/kdenlive/builder/DefaultPlaylistBuilder.java
+@@ -1,8 +1,11 @@
+ package com.aivideostudio.kdenlive.builder;
+ 
++import com.aivideostudio.composition.Composer;
++import com.aivideostudio.episode.Episode;
+ import com.aivideostudio.kdenlive.builder.context.BuildContext;
+ import com.aivideostudio.kdenlive.builder.repository.PlaylistRepository;
+ import com.aivideostudio.kdenlive.builder.repository.ProducerRepository;
++import com.aivideostudio.kdenlive.model.Filter;
+ import com.aivideostudio.kdenlive.model.Playlist;
+ import com.aivideostudio.kdenlive.model.PlaylistEntry;
+ import com.aivideostudio.kdenlive.model.Producer;
+@@ -11,16 +14,17 @@ import com.aivideostudio.timeline.Timeline;
+ import com.aivideostudio.timeline.TimelineClip;
+ 
+ import java.nio.file.Path;
++import java.util.function.Supplier;
+ 
+ /**
+- * One playlist per timeline layer: audio / background / character / hero-prop / word-card.
+- * Playlists are registered in the BuildContext playlist index under logical keys so the
+- * TractorBuilder can wire each track to its playlist. Gaps (e.g. a scene with no prop)
+- * become blanks automatically in the XML writer via PlaylistEntry.timelineFrame.
++ * One playlist per layer: audio / background / character / hero / card (+ optional music).
++ * Each video layer gets a qtblend transform from the {@link Composer} (auto-composition):
++ * background full-frame, character docked, hero pops in, card at top.
+  */
+ public class DefaultPlaylistBuilder implements PlaylistBuilder {
+ 
+     public static final String AUDIO = "audio";
++    public static final String MUSIC = "music";
+     public static final String BACKGROUND = "background";
+     public static final String CHARACTER = "character";
+     public static final String HERO = "hero";
+@@ -32,6 +36,7 @@ public class DefaultPlaylistBuilder implements PlaylistBuilder {
+         if (timeline == null) return;
+ 
+         double fps = context.getProject().getProfile().getFps();
++        Composer composer = new Composer(context.getProject().getProfile());
+         PlaylistRepository playlists = context.getRepositories().getPlaylistRepository();
+         ProducerRepository producers = context.getRepositories().getProducerRepository();
+ 
+@@ -45,12 +50,14 @@ public class DefaultPlaylistBuilder implements PlaylistBuilder {
+             long start = FrameUtil.secondsToFrame(clip.getStartTime(), fps);
+             long dur = FrameUtil.secondsToFrame(clip.getDuration(), fps);
+ 
+-            addEntry(background, producers, clip.getBackgroundImage(), start, dur);
+-            addEntry(character, producers, clip.getCharacterImage(), start, dur);
+-            addEntry(hero, producers, clip.getPropImage(), start, dur);
+-            addEntry(card, producers, clip.getCardImage(), start, dur);
+-            addEntry(audio, producers, clip.getAudioFile(), start, dur);
++            addEntry(background, producers, clip.getBackgroundImage(), start, dur, composer::background);
++            addEntry(character, producers, clip.getCharacterImage(), start, dur, composer::character);
++            addEntry(hero, producers, clip.getPropImage(), start, dur, composer::hero);
++            addEntry(card, producers, clip.getCardImage(), start, dur, composer::card);
++            addEntry(audio, producers, clip.getAudioFile(), start, dur, null);
+         }
++
++        addMusicBed(context, composer, playlists, producers, fps);
+     }
+ 
+     private Playlist register(BuildContext ctx, String key, Playlist pl) {
+@@ -59,13 +66,45 @@ public class DefaultPlaylistBuilder implements PlaylistBuilder {
+     }
+ 
+     private void addEntry(Playlist playlist, ProducerRepository producers,
+-                          Path resource, long start, long dur) {
++                          Path resource, long start, long dur,
++                          Supplier<Filter> transform) {
+         if (resource == null) return;
+         Producer producer = producers.findByResource(resource.toString());
+         if (producer == null) return;
+-        PlaylistEntry entry =
+-                new PlaylistEntry(producer.getId(), 0, Math.max(dur - 1, 0));
++        PlaylistEntry entry = new PlaylistEntry(producer.getId(), 0, Math.max(dur - 1, 0));
+         entry.setTimelineFrame(start);
++        if (transform != null) entry.getFilters().add(transform.get());
+         playlist.getEntries().add(entry);
+     }
++
++    /** Continuous background music spanning the whole timeline, reduced under the VO. */
++    private void addMusicBed(BuildContext ctx, Composer composer,
++                             PlaylistRepository playlists, ProducerRepository producers,
++                             double fps) {
++        Episode episode = ctx.getPipelineContext().getEpisode();
++        if (episode == null || episode.getMusic() == null) return;
++
++        Producer music = producers.findByResource(
++                DefaultProducerBuilder.musicResource(episode.getMusic()));
++        if (music == null) return;
++
++        long total = totalFrames(ctx);
++        if (total <= 0) return;
++
++        Playlist musicPlaylist = register(ctx, MUSIC, playlists.create());
++        PlaylistEntry entry = new PlaylistEntry(music.getId(), 0, total - 1);
++        entry.setTimelineFrame(0);
++        entry.getFilters().add(composer.musicVolume());
++        musicPlaylist.getEntries().add(entry);
++    }
++
++    private long totalFrames(BuildContext ctx) {
++        long max = 0;
++        for (Playlist pl : ctx.getProject().getPlaylists()) {
++            for (PlaylistEntry en : pl.getEntries()) {
++                max = Math.max(max, en.getTimelineFrame() + en.getDuration());
++            }
++        }
++        return max;
++    }
+ }
+diff --git a/src/main/java/com/aivideostudio/kdenlive/builder/DefaultProducerBuilder.java b/src/main/java/com/aivideostudio/kdenlive/builder/DefaultProducerBuilder.java
+index aecc70f..ff3f54f 100644
+--- a/src/main/java/com/aivideostudio/kdenlive/builder/DefaultProducerBuilder.java
++++ b/src/main/java/com/aivideostudio/kdenlive/builder/DefaultProducerBuilder.java
+@@ -1,5 +1,7 @@
+ package com.aivideostudio.kdenlive.builder;
+ 
++import com.aivideostudio.config.ProjectPaths;
++import com.aivideostudio.episode.Episode;
+ import com.aivideostudio.kdenlive.builder.context.BuildContext;
+ import com.aivideostudio.kdenlive.builder.repository.ProducerRepository;
+ import com.aivideostudio.timeline.Timeline;
+@@ -7,18 +9,19 @@ import com.aivideostudio.timeline.TimelineClip;
+ 
+ /**
+  * Maps the Timeline into MLT producers (bin clips), de-duplicated by resource.
+- * One image producer per distinct background / character / prop / card, and one
+- * audio producer per voice clip.
++ * Adds an optional continuous background-music producer (episode.music).
+  */
+ public class DefaultProducerBuilder implements ProducerBuilder {
+ 
++    /** Long enough to cover any episode; the playlist entry clips it to timeline length. */
++    private static final long MUSIC_DURATION_MS = 3_600_000;
++
+     @Override
+     public void build(BuildContext context) {
+         Timeline timeline = context.getPipelineContext().getTimeline();
+         if (timeline == null) return;
+ 
+-        ProducerRepository repo =
+-                context.getRepositories().getProducerRepository();
++        ProducerRepository repo = context.getRepositories().getProducerRepository();
+ 
+         for (TimelineClip clip : timeline.getClips()) {
+             if (clip.getBackgroundImage() != null)
+@@ -34,5 +37,16 @@ public class DefaultProducerBuilder implements ProducerBuilder {
+                 repo.createAudio(clip.getAudioFile().toString(), ms);
+             }
+         }
++
++        Episode episode = context.getPipelineContext().getEpisode();
++        if (episode != null && episode.getMusic() != null) {
++            repo.createAudio(musicResource(episode.getMusic()), MUSIC_DURATION_MS);
++        }
++    }
++
++    /** Shared so ProducerBuilder and PlaylistBuilder resolve the same music path. */
++    public static String musicResource(String music) {
++        String name = music.contains(".") ? music : music + ".mp3";
++        return ProjectPaths.MUSIC.resolve(name).toString();
+     }
+ }
+diff --git a/src/main/java/com/aivideostudio/kdenlive/builder/DefaultTractorBuilder.java b/src/main/java/com/aivideostudio/kdenlive/builder/DefaultTractorBuilder.java
+index 8d29540..6b6c3b5 100644
+--- a/src/main/java/com/aivideostudio/kdenlive/builder/DefaultTractorBuilder.java
++++ b/src/main/java/com/aivideostudio/kdenlive/builder/DefaultTractorBuilder.java
+@@ -21,6 +21,7 @@ public class DefaultTractorBuilder implements TractorBuilder {
+ 
+         TrackRepository tracks = context.getRepositories().getTrackRepository();
+         track(context, tracks, DefaultPlaylistBuilder.AUDIO, TrackType.AUDIO);
++        track(context, tracks, DefaultPlaylistBuilder.MUSIC, TrackType.AUDIO);
+         track(context, tracks, DefaultPlaylistBuilder.BACKGROUND, TrackType.VIDEO);
+         track(context, tracks, DefaultPlaylistBuilder.CHARACTER, TrackType.VIDEO);
+         track(context, tracks, DefaultPlaylistBuilder.HERO, TrackType.VIDEO);
+diff --git a/src/main/java/com/aivideostudio/kdenlive/model/PlaylistEntry.java b/src/main/java/com/aivideostudio/kdenlive/model/PlaylistEntry.java
+index 36e4a64..7e8ccdb 100644
+--- a/src/main/java/com/aivideostudio/kdenlive/model/PlaylistEntry.java
++++ b/src/main/java/com/aivideostudio/kdenlive/model/PlaylistEntry.java
+@@ -2,6 +2,8 @@ package com.aivideostudio.kdenlive.model;
+ 
+ public class PlaylistEntry {
+ 
++    private final java.util.List<Filter> filters = new java.util.ArrayList<>();
++
+     /**
+      * producer id
+      *
+@@ -74,6 +76,10 @@ public class PlaylistEntry {
+ 
+     }
+ 
++    public java.util.List<Filter> getFilters() {
++        return filters;
++    }
++
+     public long getTimelineFrame() {
+         return timelineFrame;
+     }
+diff --git a/src/main/java/com/aivideostudio/kdenlive/writer/KdenliveXmlWriter.java b/src/main/java/com/aivideostudio/kdenlive/writer/KdenliveXmlWriter.java
+index 74503ed..d67c977 100644
+--- a/src/main/java/com/aivideostudio/kdenlive/writer/KdenliveXmlWriter.java
++++ b/src/main/java/com/aivideostudio/kdenlive/writer/KdenliveXmlWriter.java
+@@ -236,6 +236,10 @@ public class KdenliveXmlWriter {
+             en.setAttribute("out", tc(pe.getOutFrame(), fps));
+             // link back to bin clip
+             prop(doc, en, "kdenlive:id", String.valueOf(kidOf(pe.getProducerId(), bin, kids)));
++            // per-clip effects (v0.9 composer: qtblend transform, etc.)
++            for (Filter f : pe.getFilters()) {
++                en.appendChild(entryFilter(doc, f));
++            }
+             e.appendChild(en);
+             cursor += pe.getDuration();
+         }
+@@ -319,6 +323,17 @@ public class KdenliveXmlWriter {
+         return e;
+     }
+ 
++    /** Per-clip effect nested inside a playlist <entry> (e.g. qtblend transform). */
++    private Element entryFilter(Document doc, Filter f) {
++        Element fe = el(doc, "filter");
++        fe.setAttribute("id", "filter" + filterSeq++);
++        prop(doc, fe, "mlt_service", f.getService());
++        for (Property p : f.getProperties()) {
++            prop(doc, fe, p.getName(), p.getValue());
++        }
++        return fe;
++    }
++
+     private void appendAudioFilters(Document doc, Element parent) {
+         Element f1 = el(doc, "filter");
+         f1.setAttribute("id", "filter" + filterSeq++);
+-- 
+2.43.0
+

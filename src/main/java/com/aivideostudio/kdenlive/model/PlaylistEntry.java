@@ -2,6 +2,8 @@ package com.aivideostudio.kdenlive.model;
 
 public class PlaylistEntry {
 
+    private final java.util.List<Filter> filters = new java.util.ArrayList<>();
+
     /**
      * producer id
      *
@@ -72,6 +74,10 @@ public class PlaylistEntry {
                 ", out=" + outFrame +
                 '}';
 
+    }
+
+    public java.util.List<Filter> getFilters() {
+        return filters;
     }
 
     public long getTimelineFrame() {

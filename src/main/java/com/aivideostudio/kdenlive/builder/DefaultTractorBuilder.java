@@ -21,6 +21,7 @@ public class DefaultTractorBuilder implements TractorBuilder {
 
         TrackRepository tracks = context.getRepositories().getTrackRepository();
         track(context, tracks, DefaultPlaylistBuilder.AUDIO, TrackType.AUDIO);
+        track(context, tracks, DefaultPlaylistBuilder.MUSIC, TrackType.AUDIO);
         track(context, tracks, DefaultPlaylistBuilder.BACKGROUND, TrackType.VIDEO);
         track(context, tracks, DefaultPlaylistBuilder.CHARACTER, TrackType.VIDEO);
         track(context, tracks, DefaultPlaylistBuilder.HERO, TrackType.VIDEO);

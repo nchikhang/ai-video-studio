@@ -236,6 +236,10 @@ public class KdenliveXmlWriter {
             en.setAttribute("out", tc(pe.getOutFrame(), fps));
             // link back to bin clip
             prop(doc, en, "kdenlive:id", String.valueOf(kidOf(pe.getProducerId(), bin, kids)));
+            // per-clip effects (v0.9 composer: qtblend transform, etc.)
+            for (Filter f : pe.getFilters()) {
+                en.appendChild(entryFilter(doc, f));
+            }
             e.appendChild(en);
             cursor += pe.getDuration();
         }
@@ -317,6 +321,17 @@ public class KdenliveXmlWriter {
             prop(doc, e, "always_active", "1");
         }
         return e;
+    }
+
+    /** Per-clip effect nested inside a playlist <entry> (e.g. qtblend transform). */
+    private Element entryFilter(Document doc, Filter f) {
+        Element fe = el(doc, "filter");
+        fe.setAttribute("id", "filter" + filterSeq++);
+        prop(doc, fe, "mlt_service", f.getService());
+        for (Property p : f.getProperties()) {
+            prop(doc, fe, p.getName(), p.getValue());
+        }
+        return fe;
     }
 
     private void appendAudioFilters(Document doc, Element parent) {
@@ -424,7 +439,7 @@ public class KdenliveXmlWriter {
             Marker m = markers.get(i);
             if (i > 0) sb.append(",");
             sb.append("{\"comment\":\"").append(esc(m.getName()))
-                    .append("\",\"pos\":").append(m.getFrame()).append("}");
+              .append("\",\"pos\":").append(m.getFrame()).append("}");
         }
         return sb.append("]").toString();
     }

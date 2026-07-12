@@ -9,6 +9,8 @@ public class Episode {
 
     private String title;
 
+    private String music;
+
     private final List<Scene> scenes = new ArrayList<>();
 
     public Episode() {
@@ -28,6 +30,14 @@ public class Episode {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public String getMusic() {
+        return music;
+    }
+
+    public void setMusic(String music) {
+        this.music = music;
     }
 
     public List<Scene> getScenes() {
