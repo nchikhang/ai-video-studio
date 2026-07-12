@@ -1,5 +1,7 @@
 package com.aivideostudio.pipeline;
 
+import com.aivideostudio.composition.CompositionConfig;
+
 import com.aivideostudio.asset.AssetService;
 import com.aivideostudio.character.CharacterService;
 import com.aivideostudio.episode.Episode;
@@ -11,6 +13,9 @@ import com.aivideostudio.workspace.EpisodeWorkspace;
 import java.util.List;
 
 public class PipelineContext {
+
+    private CompositionConfig compositionConfig = CompositionConfig.defaults();
+
 
     private AssetService assets;
 
@@ -80,5 +85,13 @@ public class PipelineContext {
 
     public void setWorkspace(EpisodeWorkspace workspace) {
         this.workspace = workspace;
+    }
+
+    public CompositionConfig getCompositionConfig() {
+        return compositionConfig;
+    }
+
+    public void setCompositionConfig(CompositionConfig compositionConfig) {
+        this.compositionConfig = compositionConfig;
     }
 }

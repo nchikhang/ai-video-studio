@@ -5,7 +5,6 @@ import com.aivideostudio.episode.Episode;
 import com.aivideostudio.kdenlive.builder.context.BuildContext;
 import com.aivideostudio.kdenlive.builder.repository.PlaylistRepository;
 import com.aivideostudio.kdenlive.builder.repository.ProducerRepository;
-import com.aivideostudio.kdenlive.model.Filter;
 import com.aivideostudio.kdenlive.model.Playlist;
 import com.aivideostudio.kdenlive.model.PlaylistEntry;
 import com.aivideostudio.kdenlive.model.Producer;
@@ -14,12 +13,11 @@ import com.aivideostudio.timeline.Timeline;
 import com.aivideostudio.timeline.TimelineClip;
 
 import java.nio.file.Path;
-import java.util.function.Supplier;
 
 /**
  * One playlist per layer: audio / background / character / hero / card (+ optional music).
- * Each video layer gets a qtblend transform from the {@link Composer} (auto-composition):
- * background full-frame, character docked, hero pops in, card at top.
+ * Video layers get a qtblend transform from the {@link Composer}; per-layer defaults and
+ * per-asset scale/position come from composition.yml (CompositionConfig on the context).
  */
 public class DefaultPlaylistBuilder implements PlaylistBuilder {
 
@@ -36,7 +34,9 @@ public class DefaultPlaylistBuilder implements PlaylistBuilder {
         if (timeline == null) return;
 
         double fps = context.getProject().getProfile().getFps();
-        Composer composer = new Composer(context.getProject().getProfile());
+        Composer composer = new Composer(
+                context.getProject().getProfile(),
+                context.getPipelineContext().getCompositionConfig());
         PlaylistRepository playlists = context.getRepositories().getPlaylistRepository();
         ProducerRepository producers = context.getRepositories().getProducerRepository();
 
@@ -50,14 +50,14 @@ public class DefaultPlaylistBuilder implements PlaylistBuilder {
             long start = FrameUtil.secondsToFrame(clip.getStartTime(), fps);
             long dur = FrameUtil.secondsToFrame(clip.getDuration(), fps);
 
-            addEntry(background, producers, clip.getBackgroundImage(), start, dur, composer::background);
-            addEntry(character, producers, clip.getCharacterImage(), start, dur, composer::character);
-            addEntry(hero, producers, clip.getPropImage(), start, dur, composer::hero);
-            addEntry(card, producers, clip.getCardImage(), start, dur, composer::card);
-            addEntry(audio, producers, clip.getAudioFile(), start, dur, null);
+            addEntry(background, producers, clip.getBackgroundImage(), start, dur, BACKGROUND, composer);
+            addEntry(character, producers, clip.getCharacterImage(), start, dur, CHARACTER, composer);
+            addEntry(hero, producers, clip.getPropImage(), start, dur, HERO, composer);
+            addEntry(card, producers, clip.getCardImage(), start, dur, CARD, composer);
+            addEntry(audio, producers, clip.getAudioFile(), start, dur, null, composer);
         }
 
-        addMusicBed(context, composer, playlists, producers, fps);
+        addMusicBed(context, composer, playlists, producers);
     }
 
     private Playlist register(BuildContext ctx, String key, Playlist pl) {
@@ -67,20 +67,30 @@ public class DefaultPlaylistBuilder implements PlaylistBuilder {
 
     private void addEntry(Playlist playlist, ProducerRepository producers,
                           Path resource, long start, long dur,
-                          Supplier<Filter> transform) {
+                          String layer, Composer composer) {
         if (resource == null) return;
         Producer producer = producers.findByResource(resource.toString());
         if (producer == null) return;
         PlaylistEntry entry = new PlaylistEntry(producer.getId(), 0, Math.max(dur - 1, 0));
         entry.setTimelineFrame(start);
-        if (transform != null) entry.getFilters().add(transform.get());
+        if (layer != null) {
+            entry.getFilters().add(composer.transform(layer, assetKey(layer, resource)));
+        }
         playlist.getEntries().add(entry);
     }
 
-    /** Continuous background music spanning the whole timeline, reduced under the VO. */
+    /** Character keyed by folder (teddy/lily/hoot); other layers by file name (ball, circle). */
+    private String assetKey(String layer, Path resource) {
+        if (CHARACTER.equals(layer) && resource.getParent() != null) {
+            return resource.getParent().getFileName().toString();
+        }
+        String name = resource.getFileName().toString();
+        int dot = name.lastIndexOf('.');
+        return dot > 0 ? name.substring(0, dot) : name;
+    }
+
     private void addMusicBed(BuildContext ctx, Composer composer,
-                             PlaylistRepository playlists, ProducerRepository producers,
-                             double fps) {
+                             PlaylistRepository playlists, ProducerRepository producers) {
         Episode episode = ctx.getPipelineContext().getEpisode();
         if (episode == null || episode.getMusic() == null) return;
 

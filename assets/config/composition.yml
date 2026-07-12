@@ -1,0 +1,18 @@
+# Transform config for the Composer (v0.9).
+# defaults: per-layer. assets: per-asset override (partial; by folder name for
+# characters, by file name for props/cards/backgrounds). x,y = normalized center
+# (0..1); scale = fraction of frame; animation = static | pop.
+defaults:
+  background: { x: 0.5,  y: 0.5,  scale: 1.0,  animation: static }
+  character:  { x: 0.24, y: 0.70, scale: 0.42, animation: static }
+  hero:       { x: 0.5,  y: 0.5,  scale: 0.5,  animation: pop }
+  card:       { x: 0.5,  y: 0.12, scale: 0.34, animation: static }
+
+assets:
+  # characters (key = folder name)
+  teddy: { scale: 0.42 }
+  lily:  { scale: 0.40 }
+  hoot:  { scale: 0.38, y: 0.68 }
+  # props / cards (key = file name, no extension)
+  ball:   { scale: 0.30 }
+  circle: { scale: 0.34 }

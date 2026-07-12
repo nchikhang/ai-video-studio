@@ -49,7 +49,7 @@ Export YouTube
 
 # Current Version
 
-v0.8.0
+v0.9.0
 
 ---
 
@@ -291,6 +291,8 @@ Kdenlive XML Writer + Timeline wiring (episode.yml → openable .kdenlive)
 ## v0.9
 
 Automatic Video Composer
+
+✅ Done
 
 ---
 

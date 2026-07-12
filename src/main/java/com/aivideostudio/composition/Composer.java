@@ -9,43 +9,29 @@ import java.util.Locale;
 /**
  * v0.9 — Automatic Video Composer.
  *
- * Turns a layer role (background / character / hero / card) into a Kdenlive
- * `qtblend` transform filter with a `rect` keyframe string, so each layer is
- * auto-positioned and animated (hero pops in). Coordinates are normalized:
- * cx,cy in [0,1] = center of the clip in the frame; scale = fraction of the
- * frame the clip occupies.
+ * Builds a Kdenlive `qtblend` transform for a layer/asset using values from
+ * {@link CompositionConfig} (assets/config/composition.yml): per-layer defaults,
+ * overridable per asset. Coordinates normalized: cx,cy in [0,1] = clip center in
+ * the frame; scale = fraction of the frame occupied.
  */
 public class Composer {
 
     private static final int POP_FRAMES = 9; // ~0.3s at 30fps
 
     private final Profile profile;
+    private final CompositionConfig config;
 
-    public Composer(Profile profile) {
+    public Composer(Profile profile, CompositionConfig config) {
         this.profile = profile;
+        this.config = config != null ? config : CompositionConfig.defaults();
     }
 
-    // ---- layer presets -------------------------------------------------
-    public Filter background() {                 // full frame, static
-        return still(0.5, 0.5, 1.0);
-    }
-
-    public Filter character() {                  // docked bottom-left
-        return still(0.24, 0.66, 0.55);
-    }
-
-    public Filter hero() {                        // center, pops in
-        return popIn(0.5, 0.5, 0.5);
-    }
-
-    public Filter card() {                        // top-center, static
-        return still(0.5, 0.12, 0.34);
-    }
-
-    /** Honour explicit values from a TimelineClip when the composer defaults aren't wanted. */
-    public Filter custom(double cx, double cy, double scale, String animation) {
-        if ("pop".equalsIgnoreCase(animation)) return popIn(cx, cy, scale);
-        return still(cx, cy, scale);
+    /** Transform for a layer ("background"/"character"/"hero"/"card") + asset key (nullable). */
+    public Filter transform(String layer, String assetKey) {
+        Transform t = config.resolve(layer, assetKey);
+        double x = t.getX(), y = t.getY(), s = t.getScale();
+        if ("pop".equalsIgnoreCase(t.getAnimation())) return popIn(x, y, s);
+        return still(x, y, s);
     }
 
     /** Static volume reduction for a continuous background-music track. */
@@ -93,7 +79,6 @@ public class Composer {
                 + String.format(Locale.US, "%.6f", opacity);
     }
 
-    /** Keyframe key as Kdenlive timecode HH:MM:SS.mmm (relative to clip start). */
     private String key(long frame) {
         long ms = Math.round(frame / profile.getFps() * 1000.0);
         long hh = ms / 3_600_000; ms %= 3_600_000;
