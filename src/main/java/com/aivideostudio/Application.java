@@ -1,6 +1,5 @@
 package com.aivideostudio;
 
-import com.aivideostudio.kdenlive.builder.*;
 import com.aivideostudio.pipeline.PipelineContext;
 import com.aivideostudio.pipeline.PipelineResult;
 import com.aivideostudio.pipeline.PipelineRunner;
@@ -13,7 +12,7 @@ import com.aivideostudio.subtitle.SubtitleRenderer;
 import com.aivideostudio.subtitle.SubtitleWriter;
 
 public class Application {
-  public static final String VERSION = "1.0.0";
+  public static final String VERSION = "1.1.0";
 
   public static void main(String[] args) throws Exception {
     printBanner();
@@ -30,7 +29,8 @@ public class Application {
             .add(new LoadCompositionConfigStep())
             .add(new BuildKdenliveStep())
             .add(new RenderStep())
-            .add(new PublishCheckStep());
+            .add(new PublishCheckStep())
+            .add(new ShortsExportStep());
     PipelineResult pipelineResult = pipelineRunner.run(context);
     System.out.println();
     System.out.println("----------------------------");

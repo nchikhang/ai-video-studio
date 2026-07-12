@@ -49,7 +49,7 @@ Export YouTube
 
 # Current Version
 
-v1.0.0
+v1.1.0
 
 ---
 
@@ -299,6 +299,14 @@ Automatic Video Composer
 ## v1.0
 
 One Click Build
+
+✅ Done
+
+---
+
+## v1.1
+
+Shorts 9:16 export
 
 ✅ Done
 
