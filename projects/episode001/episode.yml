@@ -1,20 +1,139 @@
+# PHASE 0 · Video 1 — "Chào mừng đến lớp học của Teddy!"
+# Mục tiêu: làm quen 3 nhân vật + giới thiệu lớp học (dạy nhẹ: bảng, ghế, giá sách).
+# Giọng (characters.yml): teddy/hoot = NamMinh (nam), lily = HoaiMy (nữ).
+# Poses có thật:
+#   teddy: bye clap invite pointing_side_left pointing_side_right sleep wave wow
+#   lily : bye jump smile wave wow
+#   hoot : bye pointing_side_left reading_book wave wow
+# Thẻ (assets/cards): word_bang word_ghe word_giasach skill_chao_co skill_chao_ban skill_ngoi skill_sach_se
+# Lưu ý: tool KHÔNG zoom/tô-sáng vật trên nền -> "tìm đồ vật" chạy bằng lời (hỏi -> dừng -> khen),
+#        bé tự nhìn nền lớp học (đã có sẵn bảng/ghế/giá sách) để tìm.
+
 episode:
-
-  id: episode001
-
-  title: Bài học đầu tiên
+  id: p0_video01_chao_mung
+  title: Chào mừng đến lớp học của Teddy!
+  music: "Dancing on Green Grass - The Green Orbs.mp3"   # tên file đúng như trong assets/music/
 
 scenes:
 
+  # ---------- CẢNH 1 · INTRO (cold-open, Teddy từ frame 0) ----------
   - background: classroom
     character: teddy
     pose: wave
-    text: Xin chào các bạn nhỏ!
+    text: Xin chào các bạn nhỏ! Chào mừng đến với lớp học của Teddy! Anh là Teddy đây!
+
+  - character: teddy
+    pose: invite
+    text: Từ hôm nay, anh em mình sẽ cùng nhau chuẩn bị thật tốt để vào lớp Một nhé!
+
+  # ---------- CẢNH 2 · LILY ĐẾN LỚP ----------
+  - character: lily
+    pose: jump
+    text: Ôi, lớp học đẹp quá! Nhưng… em hơi hồi hộp. Em sắp vào lớp Một rồi!
+
+  - character: teddy
+    pose: wow
+    text: Đừng lo nhé Lily! Đã có anh Teddy và bạn Hoot luôn ở bên em.
+
+  # ---------- CẢNH 3 · HOOT XUẤT HIỆN ----------
+  - character: hoot
+    pose: wave
+    text: Xin chào các bạn! Mình là Hoot. Có điều gì khó hiểu, cứ để Hoot giúp cho!
 
   - character: lily
     pose: smile
-    text: Ôi! Lớp học đẹp quá!
+    text: Tuyệt quá! Vậy mình cùng đi khám phá lớp học nào!
+
+  # ---------- CẢNH 4 · THAM QUAN LỚP HỌC (mỗi từ đọc chậm 2 lần) ----------
+  - character: teddy
+    pose: pointing_side_right
+    card: word_bang
+    text: Nhìn kìa! Đây là cái bảng. Bảng. Bảng.
+
+  - character: teddy
+    pose: pointing_side_right
+    card: word_ghe
+    text: Còn đây là cái ghế. Ghế. Ghế.
+
+  - character: teddy
+    pose: pointing_side_left
+    card: word_giasach
+    text: Và đây là giá sách. Giá sách. Giá sách.
+
+  # ---------- CẢNH 5 · TRÒ CHƠI TÌM ĐỒ VẬT (hỏi -> dừng -> khen) ----------
+  - character: teddy
+    pose: invite
+    text: Bây giờ mình cùng chơi nhé! Bé hãy tìm giúp Teddy… cái GHẾ! Cái ghế ở đâu nhỉ?
+
+  - character: teddy
+    pose: wow
+    card: word_ghe
+    text: Chính xác! Cái ghế đây rồi. Giỏi lắm!
+
+  - character: teddy
+    pose: pointing_side_right
+    text: Tiếp nào… Bé tìm cái BẢNG xem nào!
+
+  - character: teddy
+    pose: wow
+    card: word_bang
+    text: Đúng rồi! Cái bảng ở ngay giữa lớp. Tuyệt vời!
+
+  - character: teddy
+    pose: pointing_side_left
+    text: Câu cuối cùng… GIÁ SÁCH ở đâu ta?
+
+  - character: teddy
+    pose: clap
+    card: word_giasach
+    text: Chính xác luôn! Bé giỏi quá, Teddy vỗ tay khen bé nè!
+
+  # ---------- CẢNH 6 · KỸ NĂNG NHỎ (Lily hỏi, Teddy liệt kê 4 điều) ----------
+  - character: lily
+    pose: wow
+    text: Anh Teddy ơi, khi đến lớp em cần nhớ làm những gì ạ?
+
+  - character: teddy
+    pose: pointing_side_right
+    card: skill_chao_co
+    text: Nhớ nhé! Điều thứ nhất, chào cô giáo.
+
+  - character: teddy
+    pose: pointing_side_right
+    card: skill_chao_ban
+    text: Điều thứ hai, chào các bạn.
+
+  - character: teddy
+    pose: pointing_side_left
+    card: skill_ngoi
+    text: Điều thứ ba, ngồi ngay ngắn.
+
+  - character: teddy
+    pose: pointing_side_left
+    card: skill_sach_se
+    text: Và điều thứ tư, giữ lớp học thật sạch sẽ.
+
+  # ---------- CẢNH 7 · TỔNG KẾT + TEASER TẬP SAU ----------
+  - character: teddy
+    pose: invite
+    text: Hôm nay mình biết thêm bao nhiêu điều! Bé còn nhớ tên ba người bạn mới không?
+
+  - character: teddy
+    pose: wave
+    text: Đây là anh — Teddy!
+
+  - character: lily
+    pose: wave
+    text: Mình là Lily!
+
+  - character: hoot
+    pose: wave
+    text: Còn mình là Hoot!
 
   - character: hoot
     pose: reading_book
-    text: Hôm nay chúng mình sẽ học chữ A nhé!
+    text: Tập sau, tụi mình sẽ cùng học bài hát chào hỏi thật vui. Nhớ đón xem nha!
+
+  - character: teddy
+    pose: bye
+    text: Hẹn gặp lại các bé! Tạm biệt!

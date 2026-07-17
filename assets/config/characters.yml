@@ -1,28 +1,28 @@
 characters:
   teddy:
     displayName: Teddy
-    voice: vi-VN-HoaiMyNeural
-    rate: "-8%"
-    pitch: "-5Hz"
+    voice: vi-VN-NamMinhNeural   # ĐỔI: nam (trước là HoaiMy nữ -> nghe nữ tính)
+    rate: "-2%"
+    pitch: "+8Hz"                # cao & ấm hơn Hoot để tách bạch
     imageFolder: teddy
     defaultPose: wave
     subtitleColor: "#FFD54F"
     defaultAnimation: fade
   lily:
     displayName: Lily
-    voice: vi-VN-HoaiMyNeural
-    rate: "+10%"
-    pitch: "+18Hz"
+    voice: vi-VN-HoaiMyNeural    # giữ nữ — giọng nữ DUY NHẤT, dễ nhận ra
+    rate: "+12%"
+    pitch: "+22Hz"              # sáng, lí lắc (thỏ con đi hỏi)
     imageFolder: lily
-    defaultPose: happy
+    defaultPose: smile          # SỬA lỗi: trước là "happy" (không có asset)
     subtitleColor: "#F48FB1"
     defaultAnimation: fade
   hoot:
     displayName: Hoot
     voice: vi-VN-NamMinhNeural
-    rate: "-10%"
-    pitch: "-8Hz"
+    rate: "-12%"
+    pitch: "-12Hz"             # trầm & chậm (cú thông thái, giảng giải)
     imageFolder: hoot
-    defaultPose: explain
+    defaultPose: reading_book   # SỬA lỗi: trước là "explain" (không có asset)
     subtitleColor: "#90CAF9"
     defaultAnimation: fade

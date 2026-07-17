@@ -16,3 +16,10 @@ assets:
   # props / cards (key = file name, no extension)
   ball:   { scale: 0.30 }
   circle: { scale: 0.34 }
+  word_bang: { x: 0.66, y: 0.44, scale: 0.50, animation: pop }
+  word_ghe: { x: 0.66, y: 0.44, scale: 0.50, animation: pop }
+  word_giasach: { x: 0.66, y: 0.44, scale: 0.50, animation: pop }
+  skill_chao_co: { x: 0.66, y: 0.44, scale: 0.50, animation: pop }
+  skill_chao_ban: { x: 0.66, y: 0.44, scale: 0.50, animation: pop }
+  skill_ngoi: { x: 0.66, y: 0.44, scale: 0.50, animation: pop }
+  skill_sach_se: { x: 0.66, y: 0.44, scale: 0.50, animation: pop }

@@ -30,7 +30,7 @@ public class Application {
             .add(new BuildKdenliveStep())
             .add(new RenderStep())
             .add(new PublishCheckStep())
-            .add(new ShortsExportStep());
+            /*.add(new ShortsExportStep())*/;
     PipelineResult pipelineResult = pipelineRunner.run(context);
     System.out.println();
     System.out.println("----------------------------");
