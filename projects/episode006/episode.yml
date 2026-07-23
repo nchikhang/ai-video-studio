@@ -1,0 +1,20 @@
+# PHASE 0 · Video 6 — "Hình khối vui vẻ"  Thẻ: shape_tron/vuong/tamgiac
+episode:
+  id: pre_video_006_hinh_khoi
+  title: Hình khối vui vẻ
+  music: "Dancing on Green Grass - The Green Orbs.mp3"
+scenes:
+  - {background: classroom, character: teddy, pose: teddy_invite, text: "Chào các bạn nhỏ! Hôm nay mình học các hình thật vui nhé!"}
+  - {character: teddy, pose: teddy_pointing_side_right, card: shape_tron, text: "Đây là hình tròn. Tròn như quả bóng. Tròn."}
+  - {character: lily, pose: lily_wow, text: "Hình tròn tròn xoe, đáng yêu ghê!"}
+  - {character: teddy, pose: teddy_pointing_side_right, card: shape_vuong, text: "Còn đây là hình vuông. Bốn cạnh bằng nhau. Vuông."}
+  - {character: hoot, pose: hoot_pointing_side_right, text: "Ô cửa sổ cũng hình vuông đó. Vuông."}
+  - {character: teddy, pose: teddy_pointing_side_right, card: shape_tamgiac, text: "Và đây là hình tam giác. Có ba cạnh. Tam giác."}
+  - {character: lily, pose: lily_smile, text: "Giống mái nhà nhọn nhọn nè!"}
+  - {character: teddy, pose: teddy_invite, text: "Chơi nào! Hình gì tròn như quả bóng?"}
+  - {character: teddy, pose: teddy_wow, card: shape_tron, text: "Đúng rồi, hình tròn! Giỏi lắm!"}
+  - {character: teddy, pose: teddy_pointing_side_right, text: "Còn hình gì có ba cạnh nhỉ?"}
+  - {character: teddy, pose: teddy_clap, card: shape_tamgiac, text: "Chính xác, tam giác! Vỗ tay nào!"}
+  - {character: teddy, pose: teddy_invite, text: "Hôm nay mình biết: hình tròn, hình vuông, hình tam giác. Bé nhớ chưa?"}
+  - {character: hoot, pose: hoot_wave, text: "Tập sau mình ra sân chơi thật vui nhé!"}
+  - {character: teddy, pose: teddy_bye, text: "Tạm biệt! Hẹn gặp lại!"}

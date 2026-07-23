@@ -1,0 +1,20 @@
+# PHASE 0 · Video 4 — "Đếm số 1, 2, 3"  (dùng lại num_01/02/03 — KHÔNG cần asset mới)
+episode:
+  id: p0_video04_dem_1_2_3
+  title: Đếm số 1, 2, 3
+  music: "Dancing on Green Grass - The Green Orbs.mp3"
+scenes:
+  - {background: classroom, character: teddy, pose: invite, text: "Chào các bạn! Hôm nay mình học đếm: một, hai, ba!"}
+  - {character: teddy, pose: pointing_side_right, card: num_01, text: "Số một! Một quả táo. Một."}
+  - {character: lily, pose: wow, text: "Chỉ một thôi hả Teddy?"}
+  - {character: hoot, pose: pointing_side_left, text: "Đúng rồi, một quả. Một!"}
+  - {character: teddy, pose: pointing_side_right, card: num_02, text: "Số hai! Đếm nào: một, hai!"}
+  - {character: lily, pose: jump, text: "Hai quả táo, nhiều hơn rồi!"}
+  - {character: teddy, pose: pointing_side_left, card: num_03, text: "Số ba! Một, hai, ba!"}
+  - {character: hoot, pose: reading_book, text: "Ba quả táo. Ba. Giỏi lắm!"}
+  - {character: teddy, pose: invite, text: "Bé đếm giúp Teddy nhé! Đây có mấy quả?"}
+  - {character: teddy, pose: wow, card: num_02, text: "Hai quả! Chính xác!"}
+  - {character: teddy, pose: clap, card: num_03, text: "Còn đây? Ba quả! Vỗ tay nào!"}
+  - {character: teddy, pose: invite, text: "Đếm lại cùng nào: một… hai… ba!"}
+  - {character: hoot, pose: wave, text: "Tập sau mình học màu sắc thật rực rỡ nhé!"}
+  - {background: pastel_sky, character: teddy, pose: bye, text: "Tạm biệt! Hẹn gặp lại!"}

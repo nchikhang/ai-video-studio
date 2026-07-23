@@ -23,3 +23,27 @@ assets:
   skill_chao_ban: { x: 0.66, y: 0.44, scale: 0.50, animation: pop }
   skill_ngoi: { x: 0.66, y: 0.44, scale: 0.50, animation: pop }
   skill_sach_se: { x: 0.66, y: 0.44, scale: 0.50, animation: pop }
+  word_xinchao:      { x: 0.66, y: 0.44, scale: 0.50, animation: pop }
+  word_chaobuoisang: { x: 0.66, y: 0.44, scale: 0.50, animation: pop }
+  word_tambiet:      { x: 0.66, y: 0.44, scale: 0.50, animation: pop }
+  word_sach: { x: 0.66, y: 0.44, scale: 0.50, animation: pop }
+  word_vo: { x: 0.66, y: 0.44, scale: 0.50, animation: pop }
+  word_butchi: { x: 0.66, y: 0.44, scale: 0.50, animation: pop }
+  word_capsach: { x: 0.66, y: 0.44, scale: 0.50, animation: pop }
+  color_do: { x: 0.66, y: 0.44, scale: 0.52, animation: pop }
+  color_xanh: { x: 0.66, y: 0.44, scale: 0.52, animation: pop }
+  color_vang: { x: 0.66, y: 0.44, scale: 0.52, animation: pop }
+  shape_tron:    { x: 0.66, y: 0.44, scale: 0.50, animation: pop }
+  shape_vuong:   { x: 0.66, y: 0.44, scale: 0.50, animation: pop }
+  shape_tamgiac: { x: 0.66, y: 0.44, scale: 0.50, animation: pop }
+  word_xichdu:   { x: 0.66, y: 0.44, scale: 0.50, animation: pop }
+  word_cautruot: { x: 0.66, y: 0.44, scale: 0.50, animation: pop }
+  word_chay:     { x: 0.66, y: 0.44, scale: 0.50, animation: pop }
+  word_nhay:     { x: 0.66, y: 0.44, scale: 0.50, animation: pop }
+  word_doc:      { x: 0.66, y: 0.44, scale: 0.50, animation: pop }
+  word_truyen:   { x: 0.66, y: 0.44, scale: 0.50, animation: pop }
+  obj_ball_v1:   { x: 0.64, y: 0.55, scale: 0.32, animation: pop }
+  habit_ruatay: { x: 0.66, y: 0.44, scale: 0.50, animation: pop }
+  habit_danhrang: { x: 0.66, y: 0.44, scale: 0.50, animation: pop }
+  habit_anuong: { x: 0.66, y: 0.44, scale: 0.50, animation: pop }
+  habit_dingu: { x: 0.66, y: 0.44, scale: 0.50, animation: pop }

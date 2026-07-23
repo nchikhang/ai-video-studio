@@ -1,0 +1,18 @@
+# PHASE 0 · Video 8 — "Thư viện của Teddy"  Nền library. Thẻ: word_sach(tái dùng), word_doc, word_truyen
+episode:
+  id: pre_video_008_thu_vien
+  title: Thư viện của Teddy
+  music: "Dancing on Green Grass - The Green Orbs.mp3"
+scenes:
+  - {background: library, character: teddy, pose: teddy_invite, text: "Chào các bạn! Hôm nay mình vào thư viện của Teddy nhé!"}
+  - {character: teddy, pose: teddy_pointing_side_right, card: word_sach, text: "Ở đây có thật nhiều sách. Sách. Sách."}
+  - {character: hoot, pose: hoot_reading_book, text: "Hoot thích đọc sách nhất! Cùng đọc nào."}
+  - {character: teddy, pose: teddy_pointing_side_right, card: word_doc, text: "Đọc sách giúp mình biết bao điều hay. Đọc sách."}
+  - {character: lily, pose: lily_wow, text: "Mở sách ra là thấy cả một thế giới!"}
+  - {character: teddy, pose: teddy_pointing_side_right, card: word_truyen, text: "Trong sách có những câu chuyện thật hay. Câu chuyện."}
+  - {character: hoot, pose: hoot_reading_book, text: "Mỗi ngày đọc một chút, bé sẽ giỏi lắm đó!"}
+  - {character: teddy, pose: teddy_invite, text: "Chơi nào! Ai thích đọc sách thì giơ tay nào!"}
+  - {character: teddy, pose: teddy_clap, text: "Cả lớp mình đều thích! Vỗ tay khen bé!"}
+  - {character: teddy, pose: teddy_invite, text: "Hôm nay mình biết: sách, đọc sách, câu chuyện. Bé nhớ chưa?"}
+  - {character: hoot, pose: hoot_wave, text: "Tập sau mình học các thói quen tốt mỗi ngày nhé!"}
+  - {character: teddy, pose: teddy_bye, text: "Tạm biệt! Hẹn gặp lại!"}

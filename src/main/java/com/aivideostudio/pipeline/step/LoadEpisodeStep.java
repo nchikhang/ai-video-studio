@@ -18,7 +18,7 @@ public class LoadEpisodeStep extends BasePipeline {
         Episode episode =
                 loader.load(
                         ProjectPaths.PROJECTS
-                                .resolve("episode001")
+                                .resolve("episode010")
                                 .resolve("episode.yml")
                 );
 

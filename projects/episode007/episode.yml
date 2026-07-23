@@ -1,0 +1,20 @@
+# PHASE 0 · Video 7 — "Ra sân chơi nào!"  Nền playground. Thẻ: word_xichdu/cautruot/chay/nhay; prop obj_ball_v1
+episode:
+  id: pre_video_007_san_choi
+  title: Ra sân chơi nào!
+  music: "Dancing on Green Grass - The Green Orbs.mp3"
+scenes:
+  - {background: playground, character: teddy, pose: teddy_invite, text: "Chào các bạn! Hôm nay mình ra sân chơi nào!"}
+  - {character: teddy, pose: teddy_pointing_side_right, card: word_xichdu, text: "Đây là cái xích đu. Đu đưa thật vui. Xích đu."}
+  - {character: lily, pose: lily_jump, text: "Em thích chơi xích đu lắm!"}
+  - {character: teddy, pose: teddy_pointing_side_right, card: word_cautruot, text: "Còn đây là cầu trượt. Trượt xuống vèo vèo! Cầu trượt."}
+  - {character: hoot, pose: hoot_wave, text: "Nhớ chơi cẩn thận nha các bạn!"}
+  - {character: teddy, pose: teddy_wow, prop: obj_ball_v1, text: "Nhìn kìa, một quả bóng tròn! Cùng chơi bóng nào!"}
+  - {character: teddy, pose: teddy_invite, card: word_chay, text: "Mình cùng chạy nào! Chạy, chạy, chạy!"}
+  - {character: lily, pose: lily_jump, card: word_nhay, text: "Và nhảy lên thật cao! Nhảy, nhảy!"}
+  - {character: teddy, pose: teddy_invite, text: "Chơi nào! Cái gì trượt xuống vèo vèo?"}
+  - {character: teddy, pose: teddy_wow, card: word_cautruot, text: "Đúng rồi, cầu trượt! Giỏi lắm!"}
+  - {character: teddy, pose: teddy_clap, text: "Sân chơi vui quá! Vỗ tay nào!"}
+  - {character: teddy, pose: teddy_invite, text: "Hôm nay mình biết: xích đu, cầu trượt, chạy, nhảy. Bé nhớ chưa?"}
+  - {character: hoot, pose: hoot_wave, text: "Tập sau mình vào phòng đọc sách nhé!"}
+  - {character: teddy, pose: teddy_bye, text: "Tạm biệt! Hẹn gặp lại!"}

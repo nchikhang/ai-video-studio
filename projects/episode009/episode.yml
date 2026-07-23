@@ -1,0 +1,22 @@
+# PHASE 0 · Video 9 — "Thói quen tốt mỗi ngày"  Nền: classroom + kitchen + night_sky
+# Thẻ mới: habit_ruatay, habit_danhrang, habit_anuong, habit_dingu
+episode:
+  id: pre_video_009_thoi_quen_tot
+  title: Thói quen tốt mỗi ngày
+  music: "Dancing on Green Grass - The Green Orbs.mp3"
+scenes:
+  - {background: classroom, character: teddy, pose: teddy_invite, text: "Chào các bạn nhỏ! Muốn khoẻ mạnh để đi học, mình cần vài thói quen tốt nhé!"}
+  - {character: teddy, pose: teddy_pointing_side_right, card: habit_ruatay, text: "Điều đầu tiên: rửa tay sạch trước khi ăn. Rửa tay!"}
+  - {character: lily, pose: lily_wow, text: "Rửa tay cho hết vi khuẩn phải không ạ?"}
+  - {character: hoot, pose: hoot_pointing_side_left, text: "Đúng rồi! Tay sạch mới khoẻ. Rửa tay."}
+  - {character: teddy, pose: teddy_pointing_side_right, card: habit_danhrang, text: "Tiếp theo: đánh răng mỗi ngày. Đánh răng!"}
+  - {character: lily, pose: lily_smile, text: "Đánh răng cho hàm răng trắng xinh!"}
+  - {background: kitchen, character: teddy, pose: teddy_pointing_side_right, card: habit_anuong, text: "Và nhớ ăn uống đủ chất: rau và trái cây. Ăn uống lành mạnh!"}
+  - {character: hoot, pose: hoot_wave, text: "Ăn nhiều rau củ để mau lớn nha các bạn!"}
+  - {background: night_sky, character: teddy, pose: teddy_sleep, card: habit_dingu, text: "Cuối cùng: đi ngủ đúng giờ để ngày mai tỉnh táo. Ngủ ngoan nhé!"}
+  - {background: classroom, character: teddy, pose: teddy_invite, text: "Chơi nào! Trước khi ăn mình phải làm gì nhỉ?"}
+  - {character: teddy, pose: teddy_wow, card: habit_ruatay, text: "Đúng rồi, rửa tay! Giỏi lắm!"}
+  - {character: teddy, pose: teddy_clap, text: "Bé nhớ hết rồi! Vỗ tay khen bé nào!"}
+  - {character: teddy, pose: teddy_invite, text: "Bốn thói quen tốt: rửa tay, đánh răng, ăn uống lành mạnh, đi ngủ đúng giờ. Bé nhớ nhé!"}
+  - {character: hoot, pose: hoot_wave, text: "Tập sau mình cùng chơi ôn tập — tập cuối của chặng làm quen đó!"}
+  - {character: teddy, pose: teddy_bye, text: "Tạm biệt! Hẹn gặp lại!"}

@@ -1,0 +1,109 @@
+# PHASE 0 · Video 2 — "Bài hát Xin chào" (đọc có nhịp / chant)
+# Mục tiêu: tạo thói quen vận động (vẫy tay, vỗ tay, mỉm cười), khắc sâu 3 nhân vật.
+# Giọng (characters.yml): teddy/hoot = NamMinh, lily = HoaiMy.
+# Poses có thật: teddy[invite,wave,clap,bye] · lily[wave,jump,smile,bye] · hoot[wave,bye]
+# Nền có thật: classroom, pastel_sky
+# MUSIC: nên dùng bài NHỘN (~100-120 BPM) cho hợp "bài hát"; câu ngắn để lời rơi đúng nhịp.
+
+episode:
+  id: p0_video02_bai_hat_xin_chao
+  title: Bài hát Xin chào
+  music: "The_Farmer_In_The_Dell.mp3"   # ĐỔI sang bài nhộn hơn nếu có
+
+scenes:
+
+  # ---- INTRO ----
+  - background: classroom
+    character: teddy
+    pose: teddy_invite
+    text: Chào các bạn nhỏ! Hôm nay mình cùng hát Bài Hát Xin Chào nhé!
+
+  - character: teddy
+    pose: teddy_wave
+    text: Giơ tay lên, hát cùng Teddy nào!
+
+  # ---- ĐIỆP KHÚC "XIN CHÀO" ----
+  - character: teddy
+    pose: teddy_wave
+    text: Xin chào! Xin chào! Vẫy tay xin chào!
+
+  - character: lily
+    pose: lily_wave
+    text: Xin chào! Xin chào! Bạn ơi, xin chào!
+
+  # ---- VERSE: từng bạn chào ----
+  - character: teddy
+    pose: teddy_wave
+    text: Teddy xin chào các bạn!
+
+  - character: lily
+    pose: lily_jump
+    text: Lily xin chào các bạn!
+
+  - character: hoot
+    pose: hoot_wave
+    text: Hoot xin chào các bạn!
+
+  - character: teddy
+    pose: teddy_wave
+    text: Xin chào! Xin chào! Vẫy tay xin chào!
+
+  # ---- ĐOẠN "CHÀO BUỔI SÁNG" ----
+  - background: pastel_sky
+    character: teddy
+    pose: teddy_wave
+    text: Buổi sáng thức dậy, mình nói, Chào buổi sáng!
+
+  - character: lily
+    pose: lily_smile
+    text: Chào buổi sáng! Chào buổi sáng! Một ngày vui ghê!
+
+  - character: hoot
+    pose: hoot_wave
+    text: Ông mặt trời ơi, chào buổi sáng!
+
+  # ---- ĐOẠN ĐỘNG TÁC ----
+  - background: classroom
+    character: teddy
+    pose: teddy_clap
+    text: Vỗ tay nào! Vỗ tay! Vỗ tay thật đều!
+
+  - character: lily
+    pose: lily_smile
+    text: Mỉm cười nào! Cười thật tươi như Lily nè!
+
+  - character: teddy
+    pose: teddy_wave
+    text: Vẫy tay nào! Vẫy tay chào bạn thân!
+
+  # ---- ĐIỆP KHÚC ----
+  - character: teddy
+    pose: teddy_wave
+    text: Xin chào! Xin chào! Vẫy tay xin chào!
+
+  - character: lily
+    pose: lily_jump
+    text: Xin chào! Xin chào! Cùng nhau xin chào!
+
+  # ---- ĐOẠN "TẠM BIỆT" ----
+  - character: teddy
+    pose: teddy_bye
+    text: Bài hát sắp hết rồi, mình nói lời tạm biệt nha!
+
+  - character: lily
+    pose: lily_bye
+    text: Tạm biệt! Tạm biệt! Hẹn gặp lại nhé!
+
+  - character: hoot
+    pose: hoot_bye
+    text: Tạm biệt các bạn! Hẹn gặp lại!
+
+  # ---- KẾT ----
+  - character: teddy
+    pose: teddy_wave
+    text: Tập sau mình cùng khám phá lớp học tiếp nhé!
+
+  - background: pastel_sky
+    character: teddy
+    pose: teddy_bye
+    text: Tạm biệt!

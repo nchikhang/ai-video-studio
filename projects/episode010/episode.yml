@@ -1,0 +1,24 @@
+# PHASE 0 · Video 10 — "Cùng chơi ôn tập" (KẾT Phase 0)  KHÔNG cần thẻ mới
+# Tái dùng: num_03, color_do, shape_tron, word_sach (từ các lô trước, phải đã có trong assets/cards)
+episode:
+  id: pre_video_010_on_tap
+  title: Cùng chơi ôn tập
+  music: "Dancing on Green Grass - The Green Orbs.mp3"
+scenes:
+  - {background: classroom, character: teddy, pose: teddy_invite, text: "Chào các bạn! Hôm nay mình cùng chơi ôn tập thật vui nhé! Bé sẵn sàng chưa?"}
+  - {character: teddy, pose: teddy_pointing_side_right, card: num_03, text: "Câu một: đây là số mấy? Có mấy quả táo?"}
+  - {character: lily, pose: lily_wow, text: "Để em đếm… một, hai, ba!"}
+  - {character: teddy, pose: teddy_wow, card: num_03, text: "Đúng rồi, số ba! Giỏi quá!"}
+  - {character: teddy, pose: teddy_pointing_side_right, card: color_do, text: "Câu hai: đây là màu gì nào?"}
+  - {character: hoot, pose: hoot_pointing_side_left, card: color_do, text: "Màu đỏ! Như quả táo đỏ đó."}
+  - {character: teddy, pose: teddy_pointing_side_right, card: shape_tron, text: "Câu ba: còn đây là hình gì?"}
+  - {character: lily, pose: lily_jump, card: shape_tron, text: "Hình tròn! Tròn xoe!"}
+  - {character: teddy, pose: teddy_pointing_side_right, card: word_sach, text: "Câu bốn: đồ dùng học tập này là gì?"}
+  - {character: hoot, pose: hoot_reading_book, card: word_sach, text: "Quyển sách! Để đọc và học."}
+  - {character: teddy, pose: teddy_invite, text: "Câu cuối: bé vẫy tay chào được không nào?"}
+  - {character: teddy, pose: teddy_wave, text: "Vẫy tay xin chào! Hoan hô!"}
+  - {character: teddy, pose: teddy_clap, text: "Bé trả lời đúng hết! Vỗ tay thật to nào!"}
+  - {character: lily, pose: lily_wow, text: "Bé giỏi quá đi mất!"}
+  - {character: hoot, pose: hoot_wave, text: "Bé đã sẵn sàng để vào lớp Một rồi đó!"}
+  - {character: teddy, pose: teddy_invite, text: "Cảm ơn bé đã học cùng Teddy, Lily và Hoot. Hẹn gặp ở những bài học mới nhé!"}
+  - {character: teddy, pose: bye, text: "Tạm biệt! Bé giỏi lắm!"}

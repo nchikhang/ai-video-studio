@@ -1,0 +1,82 @@
+# PHASE 0 · Video 3 — "Đồ dùng học tập của bé"
+# Giọng: teddy/hoot=NamMinh, lily=HoaiMy. Poses & nền có thật. Thẻ: word_sach/vo/butchi/capsach
+
+episode:
+  id: p0_video03_do_dung_hoc_tap
+  title: Đồ dùng học tập của bé
+  music: "Dancing on Green Grass - The Green Orbs.mp3"   # bài dạy: chọn nhạc nhẹ
+
+scenes:
+
+  # ---- INTRO ----
+  - background: classroom
+    character: teddy
+    pose: teddy_invite
+    text: Chào các bạn nhỏ! Sắp vào lớp Một rồi, mình xem cần chuẩn bị gì nhé!
+
+  - character: teddy
+    pose: teddy_pointing_side_right
+    card: word_sach
+    text: Đây là gì đây? Ồ, quyển sách!
+
+  - character: lily
+    pose: lily_wow
+    text: Sách để làm gì vậy Hoot?
+
+  - character: hoot
+    pose: hoot_reading_book
+    text: Sách để đọc và học điều mới. Sách. Sách.
+
+  - character: teddy
+    pose: teddy_pointing_side_right
+    card: word_vo
+    text: Còn đây là quyển vở.
+
+  - character: hoot
+    pose: hoot_pointing_side_left
+    text: Vở để mình tập viết chữ. Vở. Vở.
+
+  - character: teddy
+    pose: teddy_pointing_side_right
+    card: word_butchi
+    text: Cái này nhỏ nhỏ… cây bút chì!
+
+  - character: lily
+    pose: lily_smile
+    text: Bút chì để viết và vẽ nữa nè!
+
+  - character: teddy
+    pose: teddy_pointing_side_right
+    card: word_capsach
+    text: Và đây là cái cặp sách.
+
+  - character: hoot
+    pose: hoot_reading_book
+    text: Cặp để đựng sách vở đến lớp. Cặp sách.
+
+  - character: teddy
+    pose: teddy_invite
+    text: Chơi nào! Đồ dùng để viết chữ là cái gì nhỉ?
+
+  - character: teddy
+    pose: teddy_wow
+    card: word_vo
+    text: Đúng rồi, quyển vở! Giỏi lắm!
+
+  - character: teddy
+    pose: teddy_clap
+    card: word_capsach
+    text: Còn cái đựng sách vở là… cặp sách! Vỗ tay nào!
+
+  - character: teddy
+    pose: teddy_invite
+    text: Hôm nay mình biết, sách, vở, bút chì, cặp sách. Bé nhớ chưa?
+
+  # ---- KẾT ----
+  - character: teddy
+    pose: teddy_wave
+    text: Tập sau mình học đếm số một, hai, ba nhé!
+
+  - character: teddy
+    pose: teddy_bye
+    text: Tạm biệt! Hẹn gặp lại!

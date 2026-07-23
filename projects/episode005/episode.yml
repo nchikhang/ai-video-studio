@@ -1,0 +1,19 @@
+# PHASE 0 · Video 5 — "Màu sắc quanh bé (Đỏ, Xanh, Vàng)"  Thẻ: color_do/xanh/vang
+episode:
+  id: p0_video05_mau_sac
+  title: Màu sắc quanh bé
+  music: "Dancing on Green Grass - The Green Orbs.mp3"
+scenes:
+  - {background: classroom, character: teddy, pose: invite, text: "Chào các bạn nhỏ! Quanh mình có bao nhiêu màu sắc, cùng xem nào!"}
+  - {character: teddy, pose: pointing_side_right, card: color_do, text: "Đây là màu đỏ! Quả táo màu đỏ. Đỏ."}
+  - {character: lily, pose: wow, text: "Ồ, màu đỏ đẹp quá!"}
+  - {character: teddy, pose: pointing_side_right, card: color_xanh, text: "Còn đây là màu xanh! Quả bóng màu xanh. Xanh."}
+  - {character: hoot, pose: pointing_side_left, text: "Bầu trời cũng màu xanh đó. Xanh."}
+  - {character: teddy, pose: pointing_side_left, card: color_vang, text: "Và đây là màu vàng! Ông mặt trời màu vàng. Vàng."}
+  - {character: lily, pose: smile, text: "Cái ghế trong lớp mình cũng màu vàng nè!"}
+  - {character: teddy, pose: invite, text: "Chơi nào! Đâu là màu đỏ? Bé chỉ giúp Teddy!"}
+  - {character: teddy, pose: wow, card: color_do, text: "Đây rồi, màu đỏ! Giỏi lắm!"}
+  - {character: teddy, pose: clap, card: color_vang, text: "Còn màu vàng đây! Vỗ tay nào!"}
+  - {character: teddy, pose: invite, text: "Hôm nay mình biết 3 màu: đỏ, xanh, vàng. Bé nhớ chưa?"}
+  - {character: hoot, pose: wave, text: "Tập sau mình học hình tròn, vuông, tam giác nhé!"}
+  - {background: pastel_sky, character: teddy, pose: bye, text: "Tạm biệt! Hẹn gặp lại!"}
